@@ -3,11 +3,6 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Layout from "./components/Layout";
-import Home from "./pages/Home";
-import ProductSingle from "./pages/ProductSingle";
-import Contact from "./pages/Contact";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
 
 const router = createBrowserRouter([
   {
@@ -16,23 +11,38 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <Home />,
+        async lazy() {
+          const page = await import("./pages/Home");
+          return { Component: page.default };
+        },
       },
       {
         path: "product/:slug",
-        element: <ProductSingle />,
+        async lazy() {
+          const page = await import("./pages/ProductSingle");
+          return { Component: page.default };
+        },
       },
       {
         path: "contact",
-        element: <Contact />,
+        async lazy() {
+          const page = await import("./pages/Contact");
+          return { Component: page.default };
+        },
       },
       {
         path: "login",
-        element: <Login />,
+        async lazy() {
+          const page = await import("./pages/Login");
+          return { Component: page.default };
+        },
       },
       {
         path: "signup",
-        element: <Signup />,
+        async lazy() {
+          const page = await import("./pages/Signup");
+          return { Component: page.default };
+        },
       },
     ],
   },
