@@ -6,6 +6,7 @@ import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import ProductSingle from "./pages/ProductSingle";
 import Contact from "./pages/Contact";
+import Login from "./pages/Login";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: "contact",
         element: <Contact />,
+      },
+      {
+        path: "login",
+        element: <Login />,
       },
     ],
   },
