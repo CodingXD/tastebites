@@ -16,7 +16,11 @@ export default function Footer() {
     <footer className="bg-gray-50">
       <div className="mx-auto max-w-5xl px-6 py-12 md:flex md:items-center md:justify-between lg:px-8">
         <div className="mt-8 md:mt-0">
-          <Link to="/" className="text-5xl text-black yesteryear-regular">
+          <Link
+            to="/"
+            className="text-5xl text-black yesteryear-regular"
+            unstable_viewTransition
+          >
             Tastebites
           </Link>
         </div>
@@ -26,6 +30,7 @@ export default function Footer() {
               key={href}
               to={href}
               className="text-gray-400 hover:text-gray-500 text-base font-medium"
+              unstable_viewTransition
             >
               {text}
             </Link>

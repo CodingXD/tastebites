@@ -1,6 +1,5 @@
 import {
   Button,
-  Link,
   Navbar,
   NavbarBrand,
   NavbarContent,
@@ -10,6 +9,7 @@ import {
   NavbarMenuToggle,
 } from "@nextui-org/react";
 import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -30,7 +30,7 @@ export default function Header() {
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           className="sm:hidden"
         />
-        <NavbarBrand as={Link} href="/">
+        <NavbarBrand as={Link} to="/" unstable_viewTransition>
           <p className="text-2xl text-black yesteryear-regular">Tastebites</p>
         </NavbarBrand>
       </NavbarContent>
@@ -38,7 +38,7 @@ export default function Header() {
       <NavbarContent className="hidden sm:flex gap-x-16" justify="center">
         {menuItems.map(({ href, text }) => (
           <NavbarItem key={text}>
-            <Link color="foreground" href={href}>
+            <Link color="foreground" to={href} unstable_viewTransition>
               {text}
             </Link>
           </NavbarItem>
@@ -47,9 +47,10 @@ export default function Header() {
           <Button
             as={Link}
             color="default"
-            href="/login"
+            to="/login"
             variant="solid"
             radius="sm"
+            unstable_viewTransition
           >
             Login/Register
           </Button>
@@ -58,13 +59,19 @@ export default function Header() {
       <NavbarMenu>
         {menuItems.map(({ href, text }) => (
           <NavbarMenuItem key={text}>
-            <Link className="w-full" href={href} size="lg">
+            <Link className="w-full" to={href} unstable_viewTransition>
               {text}
             </Link>
           </NavbarMenuItem>
         ))}
         <NavbarMenuItem className="mt-auto mb-16">
-          <Button as={Link} fullWidth href="/login" size="lg">
+          <Button
+            as={Link}
+            fullWidth
+            to="/login"
+            size="lg"
+            unstable_viewTransition
+          >
             Login/Register
           </Button>
         </NavbarMenuItem>
