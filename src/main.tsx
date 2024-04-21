@@ -5,6 +5,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import ProductSingle from "./pages/ProductSingle";
+import Contact from "./pages/Contact";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
       {
         path: "product/:slug",
         element: <ProductSingle />,
+      },
+      {
+        path: "contact",
+        element: <Contact />,
       },
     ],
   },

@@ -46,7 +46,7 @@ const recipe = {
 
 export default function ProductSingle() {
   return (
-    <>
+    <div className="max-w-5xl mx-auto px-6">
       <Image
         src={recipe.imageUrl}
         alt={recipe.title}
@@ -84,6 +84,6 @@ export default function ProductSingle() {
           </p>
         </div>
       </article>
-    </>
+    </div>
   );
 }

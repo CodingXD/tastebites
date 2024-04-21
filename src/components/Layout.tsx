@@ -6,7 +6,7 @@ export default function Layout() {
   return (
     <>
       <Header />
-      <main className="mt-6 max-w-5xl mx-auto px-6">
+      <main className="mt-6">
         <Outlet />
       </main>
       <Footer />
