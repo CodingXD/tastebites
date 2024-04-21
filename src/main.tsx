@@ -5,6 +5,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Layout from "./components/Layout";
 import { Provider } from "react-redux";
 import { store } from "./store";
+import { Toaster } from "sonner";
 
 const router = createBrowserRouter([
   {
@@ -55,5 +56,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <Provider store={store}>
       <RouterProvider router={router} />
     </Provider>
+    <Toaster richColors />
   </React.StrictMode>
 );

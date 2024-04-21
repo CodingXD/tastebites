@@ -1,7 +1,7 @@
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import { Button, Divider, Input } from "@nextui-org/react";
 import { type SubmitHandler, useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   type Output,
   minLength,
@@ -13,6 +13,10 @@ import {
   custom,
 } from "valibot";
 import { isNumberOnly } from "../lib/utils/is-number-only";
+import { fetcher } from "../lib/utils/fetcher";
+import { useAppDispatch } from "../hooks";
+import { signIn } from "../slice/user";
+import { toast } from "sonner";
 
 const schema = object(
   {
@@ -41,6 +45,8 @@ const schema = object(
 type FormFields = Output<typeof schema>;
 
 export default function Signup() {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -49,8 +55,17 @@ export default function Signup() {
   } = useForm<FormFields>({
     resolver: valibotResolver(schema),
   });
-  const onSubmit: SubmitHandler<FormFields> = (data) => {
-    reset();
+  const onSubmit: SubmitHandler<FormFields> = async (values) => {
+    try {
+      const { data } = await fetcher.post("/signup", values);
+      dispatch(signIn(data));
+      navigate("/", { unstable_viewTransition: true });
+      reset();
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || error?.message, {
+        position: "bottom-left",
+      });
+    }
   };
 
   return (
