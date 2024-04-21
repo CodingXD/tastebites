@@ -8,11 +8,18 @@ import {
   NavbarMenuItem,
   NavbarMenuToggle,
 } from "@nextui-org/react";
-import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { useCallback, useMemo, useState } from "react";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
+import type { RootState } from "../store";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { signOut } from "../slice/user";
 
 export default function Header() {
+  const user = useAppSelector((state: RootState) => state.user.user);
+  const dispatch = useAppDispatch();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   const menuItems = useMemo(
     () => [
@@ -22,6 +29,15 @@ export default function Header() {
     ],
     []
   );
+
+  const logout = useCallback(() => {
+    dispatch(signOut());
+    navigate("/login", { unstable_viewTransition: true });
+  }, []);
+
+  if (!user && !["/login", "/signup", "/forgot-password"].includes(pathname)) {
+    return <Navigate to="/login" replace />;
+  }
 
   return (
     <Navbar onMenuOpenChange={setIsMenuOpen} className="shadow-sm">
@@ -45,14 +61,14 @@ export default function Header() {
         ))}
         <NavbarItem>
           <Button
-            as={Link}
-            color="default"
-            to="/login"
+            as={user ? undefined : Link}
+            to={user ? undefined : "/login"}
             variant="solid"
             radius="sm"
-            unstable_viewTransition
+            unstable_viewTransition={!!user}
+            onPress={user ? logout : undefined}
           >
-            Login/Register
+            {user ? "Logout" : "Login/Register"}
           </Button>
         </NavbarItem>
       </NavbarContent>
@@ -66,13 +82,14 @@ export default function Header() {
         ))}
         <NavbarMenuItem className="mt-auto mb-16">
           <Button
-            as={Link}
+            as={user ? undefined : Link}
             fullWidth
-            to="/login"
+            to={user ? undefined : "/login"}
             size="lg"
-            unstable_viewTransition
+            unstable_viewTransition={!!user}
+            onPress={user ? logout : undefined}
           >
-            Login/Register
+            {user ? "Logout" : "Login/Register"}
           </Button>
         </NavbarMenuItem>
       </NavbarMenu>
