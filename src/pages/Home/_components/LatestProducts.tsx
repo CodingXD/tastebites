@@ -42,6 +42,7 @@ export default function LatestProducts() {
                 author={author}
                 authorImageUrl={authorImageUrl}
                 createdAt={createdAt}
+                href={`/product/${slug}`}
               />
             )
           )}

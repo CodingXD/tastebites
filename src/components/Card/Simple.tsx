@@ -30,7 +30,7 @@ export default function Simple({
             alt={title}
             src={
               imageUrl.startsWith("/")
-                ? `${import.meta.env.VITE_PUBLIC_API_URL}${imageUrl}`
+                ? `${import.meta.env.VITE_API_URL}${imageUrl}`
                 : imageUrl
             }
             isLoading={isLoading}
@@ -58,10 +58,10 @@ export default function Simple({
           }
         />
       )}
-      <div className="mt-2 flex flex-col justify-between align-bottom">
+      <div className="min-h-20 mt-2 flex flex-col justify-between align-bottom">
         <Link
           to={href}
-          className="min-h-20 text-base font-semibold text-gray-900"
+          className="text-base font-semibold text-gray-900 max-w-fit"
         >
           {title}
         </Link>

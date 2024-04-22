@@ -5,12 +5,12 @@ interface Common {
   title: string;
   isLoading?: boolean;
   as?: ElementType;
+  href: string;
 }
 
 export interface SimpleCardProps extends Common {
   rating?: number;
   badges?: string[];
-  href: string;
   slug: string;
 }
 

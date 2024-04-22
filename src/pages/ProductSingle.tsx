@@ -31,12 +31,15 @@ export default function ProductSingle() {
       ) : data ? (
         <>
           <Image
-            src={data.imageUrl}
+            src={
+              data.imageUrl.startsWith("/")
+                ? `${import.meta.env.VITE_API_URL}${data.imageUrl}`
+                : data.imageUrl
+            }
             alt={data.title}
             height={120}
             width={1024}
-            className="aspect-video"
-            isLoading={isLoading}
+            className="aspect-video object-cover"
           />
           <article className="text-pretty my-10">
             <h1 className="mb-10 lg:text-5xl text-4xl font-semibold">

@@ -1,10 +1,12 @@
 import { Button, Card, CardBody, Image } from "@nextui-org/react";
 import { HorizontalCardProps } from "./types";
+import { Link } from "react-router-dom";
 
 export default function Horizontal({
   imageUrl,
   title,
   description,
+  href,
 }: HorizontalCardProps) {
   return (
     <Card
@@ -33,7 +35,13 @@ export default function Horizontal({
                 <p className="text-small text-foreground/80 leading-6 text-pretty">
                   {description}
                 </p>
-                <Button radius="sm" className="mt-6" size="lg">
+                <Button
+                  as={Link}
+                  href={href}
+                  radius="sm"
+                  className="mt-6"
+                  size="lg"
+                >
                   READ MORE
                 </Button>
               </div>
