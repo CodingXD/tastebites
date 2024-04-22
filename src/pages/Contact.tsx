@@ -41,8 +41,8 @@ export default function Contact() {
   const onSubmit: SubmitHandler<FormFields> = async (values) => {
     try {
       await fetcher.post("/message", values);
+      reset({ email: "", message: "", name: "", phoneNumber: "" });
       toast.success("Message received. We'll get back to you ASAP");
-      reset();
     } catch (error: any) {
       toast.error(error?.response?.data?.message || error?.message, {
         position: "bottom-left",
