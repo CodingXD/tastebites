@@ -10,6 +10,8 @@ interface Common {
 export interface SimpleCardProps extends Common {
   rating?: number;
   badges?: string[];
+  href: string;
+  slug: string;
 }
 
 export interface HorizontalCardProps extends Common {

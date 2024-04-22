@@ -11,6 +11,8 @@ import {
   maxLength,
 } from "valibot";
 import { isNumberOnly } from "../lib/utils/is-number-only";
+import { fetcher } from "../lib/utils/fetcher";
+import { toast } from "sonner";
 
 const schema = object({
   name: string([minLength(1, "Name is required")]),
@@ -36,8 +38,16 @@ export default function Contact() {
   } = useForm<FormFields>({
     resolver: valibotResolver(schema),
   });
-  const onSubmit: SubmitHandler<FormFields> = (data) => {
-    reset();
+  const onSubmit: SubmitHandler<FormFields> = async (values) => {
+    try {
+      await fetcher.post("/message", values);
+      toast.success("Message received. We'll get back to you ASAP");
+      reset();
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || error?.message, {
+        position: "bottom-left",
+      });
+    }
   };
 
   return (
@@ -64,6 +74,7 @@ export default function Contact() {
                   variant="underlined"
                   errorMessage={errors.name?.message}
                   isInvalid={!!errors.name?.message}
+                  autoComplete="name"
                 />
                 <Input
                   {...register("email")}

@@ -1,7 +1,10 @@
 import { Chip, Image } from "@nextui-org/react";
 import type { SimpleCardProps } from "./types";
-import { Star } from "lucide-react";
 import { createElement } from "react";
+import { Link } from "react-router-dom";
+import "@smastrom/react-rating/style.css";
+import { Rating, ThinRoundedStar } from "@smastrom/react-rating";
+import { useUpdateProductMutation } from "../../services/product";
 
 export default function Simple({
   imageUrl,
@@ -10,33 +13,54 @@ export default function Simple({
   isLoading,
   as = "div",
   badges = [],
+  href,
+  slug,
 }: SimpleCardProps) {
-  const stars = Array(5)
-    .fill(<Star size={24} fill="#EEEEEE" color="#C8C8C8" strokeWidth={1} />)
-    .fill(<Star size={24} fill="#E50000" color="#E50000" />, 0, rating);
+  const [updatePost] = useUpdateProductMutation();
 
   return createElement(
     as,
     { className: "relative" },
     <>
       <div className="group aspect-h-7 aspect-w-10 block w-full overflow-hidden max-h-80">
-        <Image
-          isZoomed
-          radius="none"
-          alt={title}
-          src={imageUrl}
-          isLoading={isLoading}
-          loading="lazy"
-          decoding="async"
-        />
+        <Link to={href}>
+          <Image
+            isZoomed
+            radius="none"
+            alt={title}
+            src={imageUrl}
+            isLoading={isLoading}
+            loading="lazy"
+            decoding="async"
+          />
+        </Link>
       </div>
       {typeof rating === "number" && (
-        <div className="mt-4 flex space-x-2">{stars}</div>
+        <Rating
+          value={rating}
+          className="mt-4 size-6 max-w-36"
+          itemStyles={{
+            itemShapes: ThinRoundedStar,
+            activeFillColor: "#E50000",
+            activeStrokeColor: "#C8C8C8",
+            inactiveFillColor: "#EEEEEE",
+            inactiveStrokeColor: "#E50000",
+          }}
+          onChange={(value: number) =>
+            updatePost({
+              slug,
+              rating: value,
+            }).unwrap() as any
+          }
+        />
       )}
       <div className="mt-2 flex flex-col justify-between align-bottom">
-        <p className="min-h-20 text-base font-semibold text-gray-900">
+        <Link
+          to={href}
+          className="min-h-20 text-base font-semibold text-gray-900"
+        >
           {title}
-        </p>
+        </Link>
         {badges.length > 0 && (
           <div className="flex flex-wrap gap-x-4 gap-y-2 mt-auto">
             {badges.map((text) => (

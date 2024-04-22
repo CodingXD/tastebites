@@ -28,7 +28,7 @@ export default function Horizontal({
 
           <div className="flex flex-col col-span-6 md:col-span-7">
             <div className="flex justify-between items-start">
-              <div>
+              <div className="lg:pr-20">
                 <h3 className="text-4xl font-semibold mt-2 mb-4">{title}</h3>
                 <p className="text-small text-foreground/80 leading-6 text-pretty">
                   {description}

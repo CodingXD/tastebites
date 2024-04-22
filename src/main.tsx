@@ -15,7 +15,7 @@ const router = createBrowserRouter([
       {
         path: "",
         async lazy() {
-          const page = await import("./pages/Home");
+          const page = await import("./pages/Home/index");
           return { Component: page.default };
         },
       },
