@@ -2,10 +2,20 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { Product } from "../types/product";
 import type { Filters } from "../types/filters";
 import qs from "qs";
+import type { RootState } from "../store";
 
 export const productApi = createApi({
   reducerPath: "productApi",
-  baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API_URL }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: import.meta.env.VITE_API_URL,
+    prepareHeaders: (headers: Headers, { getState }) => {
+      const token = (getState() as RootState).user.user?.token;
+      if (token) {
+        headers.append("Authorization", `Bearer ${token}`);
+      }
+      return headers;
+    },
+  }),
   tagTypes: ["Products"],
   endpoints: (builder) => ({
     getProducts: builder.query<Product[], Filters>({
