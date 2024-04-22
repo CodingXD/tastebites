@@ -5,7 +5,7 @@ import { useGetProductsQuery } from "../../../services/product";
 export default function FeaturedProducts() {
   const user = useAppSelector((state) => state.user.user);
   const { data, error, isLoading } = useGetProductsQuery(
-    { limit: 3, offset: 0 },
+    { limit: 3, offset: 0, categories: ["featured"] },
     {
       skip: !user,
     }
@@ -27,7 +27,7 @@ export default function FeaturedProducts() {
       >
         {data.map(({ slug, imageUrl, rating, title }) => (
           <Simple
-            key={imageUrl}
+            key={slug}
             imageUrl={imageUrl}
             title={title}
             rating={rating}

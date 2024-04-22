@@ -5,7 +5,7 @@ import { useGetProductsQuery } from "../../../services/product";
 export default function FreshProducts() {
   const user = useAppSelector((state) => state.user.user);
   const { data, error, isLoading } = useGetProductsQuery(
-    { limit: 3, offset: 0 },
+    { limit: 4, offset: 0, categories: ["fresh"] },
     {
       skip: !user,
     }
@@ -23,12 +23,13 @@ export default function FreshProducts() {
     return (
       <>
         <h3 className="font-semibold text-3xl mb-6">Fresh Recipes</h3>
-        {data.map(({ imageUrl, title }) => (
+        {data.map(({ imageUrl, title, slug }) => (
           <Simple
+            key={slug}
             imageUrl={imageUrl}
             title={title}
-            href="/product/abc"
-            slug="very-berry-healthy-summer-smoothie"
+            href={`/product/${slug}`}
+            slug={slug}
           />
         ))}
       </>

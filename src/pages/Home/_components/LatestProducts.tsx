@@ -5,7 +5,7 @@ import { useGetProductsQuery } from "../../../services/product";
 export default function LatestProducts() {
   const user = useAppSelector((state) => state.user.user);
   const { data, error, isLoading } = useGetProductsQuery(
-    { limit: 3, offset: 0 },
+    { limit: 2, offset: 0 },
     {
       skip: !user,
     }
@@ -32,9 +32,10 @@ export default function LatestProducts() {
               description,
               imageUrl,
               title,
+              slug,
             }) => (
               <Post
-                key={imageUrl}
+                key={slug}
                 title={title}
                 description={description}
                 imageUrl={imageUrl}

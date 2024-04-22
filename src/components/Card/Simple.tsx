@@ -28,7 +28,11 @@ export default function Simple({
             isZoomed
             radius="none"
             alt={title}
-            src={imageUrl}
+            src={
+              imageUrl.startsWith("/")
+                ? `${import.meta.env.VITE_PUBLIC_API_URL}${imageUrl}`
+                : imageUrl
+            }
             isLoading={isLoading}
             loading="lazy"
             decoding="async"

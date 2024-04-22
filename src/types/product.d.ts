@@ -7,6 +7,7 @@ export type Product = {
   badges: string[];
   ingredients: string[];
   instructions: string[];
+  categories: string[];
   author: string;
   createdAt: string;
   authorImageUrl: string;

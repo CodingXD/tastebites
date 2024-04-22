@@ -5,7 +5,7 @@ import { useGetProductsQuery } from "../../../services/product";
 export default function CuratedProducts() {
   const user = useAppSelector((state) => state.user.user);
   const { data, error, isLoading } = useGetProductsQuery(
-    { limit: 3, offset: 0 },
+    { limit: 6, offset: 0, categories: ["curated"] },
     {
       skip: !user,
     }
@@ -27,14 +27,15 @@ export default function CuratedProducts() {
           role="list"
           className="mt-8 grid gap-x-4 gap-y-8 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 xl:gap-x-8"
         >
-          {data.map(({ badges, imageUrl, title }) => (
+          {data.map(({ badges, imageUrl, title, slug }) => (
             <Simple
+              key={slug}
               imageUrl={imageUrl}
               title={title}
               as="li"
               badges={badges}
-              href="/product/abc"
-              slug="very-berry-healthy-summer-smoothie"
+              href={`/product/${slug}`}
+              slug={slug}
             />
           ))}
         </ul>
