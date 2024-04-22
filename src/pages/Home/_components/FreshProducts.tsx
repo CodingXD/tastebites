@@ -1,3 +1,5 @@
+import { Skeleton } from "@nextui-org/react";
+import Alert from "../../../components/Alert";
 import { Simple } from "../../../components/Card";
 import { useAppSelector } from "../../../hooks";
 import { useGetProductsQuery } from "../../../services/product";
@@ -12,11 +14,44 @@ export default function FreshProducts() {
   );
 
   if (error) {
-    return <></>;
+    return <Alert title={(error as any)?.response?.data?.message} />;
   }
 
   if (isLoading) {
-    return <></>;
+    return (
+      <>
+        <div className="space-y-5 p-4">
+          <Skeleton className="rounded-lg">
+            <div className="h-24 rounded-lg bg-secondary"></div>
+          </Skeleton>
+          <div className="space-y-3">
+            <Skeleton className="w-3/5 rounded-lg">
+              <div className="h-3 w-full rounded-lg bg-secondary"></div>
+            </Skeleton>
+          </div>
+        </div>
+        <div className="space-y-5 p-4">
+          <Skeleton className="rounded-lg">
+            <div className="h-24 rounded-lg bg-secondary"></div>
+          </Skeleton>
+          <div className="space-y-3">
+            <Skeleton className="w-3/5 rounded-lg">
+              <div className="h-3 w-full rounded-lg bg-secondary"></div>
+            </Skeleton>
+          </div>
+        </div>
+        <div className="space-y-5 p-4">
+          <Skeleton className="rounded-lg">
+            <div className="h-24 rounded-lg bg-secondary"></div>
+          </Skeleton>
+          <div className="space-y-3">
+            <Skeleton className="w-3/5 rounded-lg">
+              <div className="h-3 w-full rounded-lg bg-secondary"></div>
+            </Skeleton>
+          </div>
+        </div>
+      </>
+    );
   }
 
   if (data) {
