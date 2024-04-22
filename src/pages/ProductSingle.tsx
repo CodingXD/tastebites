@@ -8,8 +8,6 @@ export default function ProductSingle() {
     skip: !slug,
   });
 
-  console.log(error);
-
   return (
     <div className="max-w-5xl mx-auto px-6">
       {error ? (
@@ -19,13 +17,17 @@ export default function ProductSingle() {
           </small>
         </div>
       ) : isLoading ? (
-        <div className="w-full flex items-center gap-3">
-          <div>
-            <Skeleton className="flex rounded-full w-12 h-12" />
-          </div>
-          <div className="w-full flex flex-col gap-2">
-            <Skeleton className="h-3 w-3/5 rounded-lg" />
-            <Skeleton className="h-3 w-4/5 rounded-lg" />
+        <div className="space-y-5 p-4">
+          <Skeleton className="rounded-lg">
+            <div className="h-24 rounded-lg bg-secondary"></div>
+          </Skeleton>
+          <div className="space-y-3">
+            <Skeleton className="w-3/5 rounded-lg">
+              <div className="h-3 w-full rounded-lg bg-secondary"></div>
+            </Skeleton>
+            <Skeleton className="w-4/5 rounded-lg">
+              <div className="h-3 w-full rounded-lg bg-secondary-300"></div>
+            </Skeleton>
           </div>
         </div>
       ) : data ? (
