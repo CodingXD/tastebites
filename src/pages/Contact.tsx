@@ -1,5 +1,14 @@
 import { valibotResolver } from "@hookform/resolvers/valibot";
-import { Button, Divider, Input, Textarea } from "@heroui/react";
+import {
+  Button,
+  FieldError,
+  Input,
+  Label,
+  Separator,
+  Spinner,
+  TextArea,
+  TextField,
+} from "@heroui/react";
 import { SendHorizonal } from "lucide-react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import {
@@ -20,12 +29,12 @@ const schema = object({
   email: pipe(
     string(),
     minLength(1, "Email is required"),
-    email("Invalid email address")
+    email("Invalid email address"),
   ),
   phoneNumber: pipe(
     string(),
     minLength(10, "Must be at least 10 digits"),
-    maxLength(10, "Must not be greater than 10 digits")
+    maxLength(10, "Must not be greater than 10 digits"),
   ),
   message: pipe(string(), minLength(1, "Message is required")),
 });
@@ -46,8 +55,18 @@ export default function Contact() {
       await fetcher.post("/message", values);
       reset({ email: "", message: "", name: "", phoneNumber: "" });
       toast.success("Message received. We'll get back to you ASAP");
-    } catch (error: any) {
-      toast.error(error?.response?.data?.message || error?.message, {
+    } catch (error: unknown) {
+      const message =
+        typeof error === "object" && error !== null
+          ? ((
+              error as {
+                response?: { data?: { message?: string } };
+                message?: string;
+              }
+            ).response?.data?.message ??
+            (error as { message?: string }).message)
+          : undefined;
+      toast.error(message || "Something went wrong", {
         position: "bottom-left",
       });
     }
@@ -62,7 +81,7 @@ export default function Contact() {
               <h1 className="text-3xl tracking-tight sm:text-4xl font-semibold leading-7 text-[#03337B]">
                 LEAVE US A MESSAGE
               </h1>
-              <Divider className="w-1/2 h-1.5 rounded-full my-4 bg-[#E50000]" />
+              <Separator className="w-1/2 h-1.5 rounded-full my-4 bg-[#E50000]" />
               <p className="mt-6 text-lg leading-8 text-gray-600">
                 There are many variations of passages of Lorem Ipsu available,
                 but the majority have suffered alte.
@@ -71,47 +90,59 @@ export default function Contact() {
                 onSubmit={handleSubmit(onSubmit)}
                 className="mt-2 space-y-4"
               >
-                <Input
-                  {...register("name")}
-                  label="Name *"
-                  variant="underlined"
-                  errorMessage={errors.name?.message}
-                  isInvalid={!!errors.name?.message}
-                  autoComplete="name"
-                />
-                <Input
-                  {...register("email")}
-                  label="Email *"
+                <TextField name="name" isInvalid={!!errors.name?.message}>
+                  <Label>Name *</Label>
+                  <Input
+                    {...register("name")}
+                    variant="secondary"
+                    autoComplete="name"
+                  />
+                  {errors.name?.message ? (
+                    <FieldError>{errors.name.message}</FieldError>
+                  ) : null}
+                </TextField>
+                <TextField
+                  name="email"
                   type="email"
-                  variant="underlined"
-                  errorMessage={errors.email?.message}
                   isInvalid={!!errors.email?.message}
-                />
-                <Input
-                  {...register("phoneNumber")}
-                  label="Phone *"
-                  type="number"
-                  variant="underlined"
-                  errorMessage={errors.phoneNumber?.message}
-                  isInvalid={!!errors.phoneNumber?.message}
-                  autoComplete="tel-national"
-                  maxLength={10}
-                  inputMode="numeric"
-                  onKeyDown={isNumberOnly}
-                />
-                <Textarea
-                  {...register("message")}
-                  label="Message *"
-                  variant="underlined"
-                  errorMessage={errors.message?.message}
-                  isInvalid={!!errors.message?.message}
-                />
-                <Button
-                  radius="sm"
-                  type="submit"
-                  endContent={<SendHorizonal />}
-                  isLoading={isSubmitting}
                 >
+                  <Label>Email *</Label>
+                  <Input
+                    {...register("email")}
+                    type="email"
+                    variant="secondary"
+                  />
+                  {errors.email?.message ? (
+                    <FieldError>{errors.email.message}</FieldError>
+                  ) : null}
+                </TextField>
+                <TextField
+                  name="phoneNumber"
+                  isInvalid={!!errors.phoneNumber?.message}
+                >
+                  <Label>Phone *</Label>
+                  <Input
+                    {...register("phoneNumber")}
+                    type="number"
+                    variant="secondary"
+                    autoComplete="tel-national"
+                    maxLength={10}
+                    inputMode="numeric"
+                    onKeyDown={isNumberOnly}
+                  />
+                  {errors.phoneNumber?.message ? (
+                    <FieldError>{errors.phoneNumber.message}</FieldError>
+                  ) : null}
+                </TextField>
+                <TextField name="message" isInvalid={!!errors.message?.message}>
+                  <Label>Message *</Label>
+                  <TextArea {...register("message")} variant="secondary" />
+                  {errors.message?.message ? (
+                    <FieldError>{errors.message.message}</FieldError>
+                  ) : null}
+                </TextField>
+                <Button type="submit" isDisabled={isSubmitting}>
+                  {isSubmitting ? <Spinner size="sm" /> : <SendHorizonal />}
                   Submit
                 </Button>
               </form>

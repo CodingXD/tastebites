@@ -1,4 +1,4 @@
-import { Chip, Image } from "@heroui/react";
+import { Chip } from "@heroui/react";
 import type { SimpleCardProps } from "./types";
 import { createElement } from "react";
 import { Link } from "react-router-dom";
@@ -17,6 +17,9 @@ export default function Simple({
   slug,
 }: SimpleCardProps) {
   const [updatePost] = useUpdateProductMutation();
+  const resolvedImageUrl = imageUrl.startsWith("/")
+    ? `${import.meta.env.VITE_API_URL}${imageUrl}`
+    : imageUrl;
 
   return createElement(
     as,
@@ -24,19 +27,17 @@ export default function Simple({
     <>
       <div className="group aspect-h-7 aspect-w-10 block w-full overflow-hidden max-h-80">
         <Link to={href}>
-          <Image
-            isZoomed
-            radius="none"
-            alt={title}
-            src={
-              imageUrl.startsWith("/")
-                ? `${import.meta.env.VITE_API_URL}${imageUrl}`
-                : imageUrl
-            }
-            isLoading={isLoading}
-            loading="lazy"
-            decoding="async"
-          />
+          {isLoading ? (
+            <div className="h-full w-full animate-pulse bg-secondary" />
+          ) : (
+            <img
+              alt={title}
+              src={resolvedImageUrl}
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              loading="lazy"
+              decoding="async"
+            />
+          )}
         </Link>
       </div>
       {typeof rating === "number" && (
@@ -50,12 +51,12 @@ export default function Simple({
             inactiveFillColor: "#EEEEEE",
             inactiveStrokeColor: "#E50000",
           }}
-          onChange={(value: number) =>
-            updatePost({
+          onChange={(value: number) => {
+            void updatePost({
               slug,
               rating: value,
-            }).unwrap() as any
-          }
+            }).unwrap();
+          }}
         />
       )}
       <div className="min-h-20 mt-2 flex flex-col justify-between align-bottom">
@@ -71,8 +72,7 @@ export default function Simple({
               <Chip
                 key={text}
                 size="lg"
-                variant="bordered"
-                radius="sm"
+                variant="secondary"
                 className="py-4"
                 color="danger"
               >
@@ -82,6 +82,6 @@ export default function Simple({
           </div>
         )}
       </div>
-    </>
+    </>,
   );
 }

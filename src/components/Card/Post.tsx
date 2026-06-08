@@ -1,4 +1,4 @@
-import { Image, User } from "@heroui/react";
+import { Avatar } from "@heroui/react";
 import type { PostCardProps } from "./types";
 import { createElement, useMemo } from "react";
 import { intervalToDuration } from "date-fns";
@@ -26,6 +26,8 @@ export default function Post({
     return diff;
   }, [createdAt]);
 
+  const authorInitial = author.trim().slice(0, 1).toUpperCase() || "U";
+
   return createElement(
     as,
     { className: "relative" },
@@ -34,15 +36,17 @@ export default function Post({
         to={href}
         className="group aspect-h-7 aspect-w-10 block w-full overflow-hidden max-h-80"
       >
-        <Image
-          isZoomed
-          radius="none"
-          alt={title}
-          src={imageUrl}
-          isLoading={isLoading}
-          loading="lazy"
-          decoding="async"
-        />
+        {isLoading ? (
+          <div className="h-full w-full animate-pulse bg-secondary" />
+        ) : (
+          <img
+            alt={title}
+            src={imageUrl}
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            loading="lazy"
+            decoding="async"
+          />
+        )}
       </Link>
       <article className="p-6 bg-gray-100 border">
         <Link to={href} className="mb-2 text-base font-semibold text-gray-900">
@@ -50,7 +54,13 @@ export default function Post({
         </Link>
         <p className="mt-2">{description}</p>
         <div className="flex justify-between mt-8 items-center">
-          <User name={author} avatarProps={{ src: authorImageUrl }} />
+          <div className="flex items-center gap-3">
+            <Avatar>
+              <Avatar.Image src={authorImageUrl} alt={author} />
+              <Avatar.Fallback>{authorInitial}</Avatar.Fallback>
+            </Avatar>
+            <span className="text-sm font-medium text-gray-900">{author}</span>
+          </div>
           <time dateTime={createdAt}>{difference}</time>
         </div>
       </article>

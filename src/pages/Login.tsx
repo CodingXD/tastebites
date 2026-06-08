@@ -1,5 +1,13 @@
 import { valibotResolver } from "@hookform/resolvers/valibot";
-import { Button, Divider, Input } from "@heroui/react";
+import {
+  Button,
+  FieldError,
+  Input,
+  Label,
+  Separator,
+  Spinner,
+  TextField,
+} from "@heroui/react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -19,7 +27,7 @@ const schema = object({
   email: pipe(
     string(),
     minLength(1, "Email is required"),
-    email("Invalid email address")
+    email("Invalid email address"),
   ),
   password: pipe(string(), minLength(1, "Password is required")),
 });
@@ -43,8 +51,18 @@ export default function Login() {
       dispatch(signIn(data));
       navigate("/", { viewTransition: true });
       reset();
-    } catch (error: any) {
-      toast.error(error?.response?.data?.message || error?.message, {
+    } catch (error: unknown) {
+      const message =
+        typeof error === "object" && error !== null
+          ? ((
+              error as {
+                response?: { data?: { message?: string } };
+                message?: string;
+              }
+            ).response?.data?.message ??
+            (error as { message?: string }).message)
+          : undefined;
+      toast.error(message || "Something went wrong", {
         position: "bottom-left",
       });
     }
@@ -59,7 +77,7 @@ export default function Login() {
               <h1 className="text-3xl tracking-tight sm:text-4xl font-semibold leading-7 text-[#03337B]">
                 LOGIN TO YOUR ACCOUNT
               </h1>
-              <Divider className="w-1/2 h-1.5 rounded-full my-4 bg-[#E50000]" />
+              <Separator className="w-1/2 h-1.5 rounded-full my-4 bg-[#E50000]" />
               <p className="mt-6 text-lg leading-8 text-gray-600">
                 There are many variations of passages of Lorem Ipsu available,
                 but the majority have suffered alte.
@@ -68,30 +86,40 @@ export default function Login() {
                 onSubmit={handleSubmit(onSubmit)}
                 className="mt-2 space-y-4"
               >
-                <Input
-                  {...register("email")}
-                  label="Email *"
+                <TextField
+                  name="email"
                   type="email"
-                  variant="underlined"
-                  errorMessage={errors.email?.message}
                   isInvalid={!!errors.email?.message}
-                />
-                <Input
-                  {...register("password")}
-                  label="Password *"
+                >
+                  <Label>Email *</Label>
+                  <Input {...register("email")} variant="secondary" />
+                  {errors.email?.message ? (
+                    <FieldError>{errors.email.message}</FieldError>
+                  ) : null}
+                </TextField>
+                <TextField
+                  name="password"
                   type="password"
-                  variant="underlined"
-                  errorMessage={errors.password?.message}
                   isInvalid={!!errors.password?.message}
-                  autoComplete="current-password"
-                />
+                >
+                  <Label>Password *</Label>
+                  <Input
+                    {...register("password")}
+                    variant="secondary"
+                    autoComplete="current-password"
+                  />
+                  {errors.password?.message ? (
+                    <FieldError>{errors.password.message}</FieldError>
+                  ) : null}
+                </TextField>
                 <div className="text-right text-danger">
                   <Link to="/forgot-password" viewTransition>
                     Forgot password?
                   </Link>
                 </div>
                 <br />
-                <Button radius="sm" type="submit" isLoading={isSubmitting}>
+                <Button type="submit" isDisabled={isSubmitting}>
+                  {isSubmitting ? <Spinner size="sm" /> : null}
                   Login
                 </Button>
                 <br />

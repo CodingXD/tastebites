@@ -10,11 +10,21 @@ export default function LatestProducts() {
     { limit: 2, offset: 0 },
     {
       skip: !user,
-    }
+    },
   );
 
   if (error) {
-    return <Alert title={(error as any)?.response?.data?.message} />;
+    const message =
+      typeof error === "object" && error !== null
+        ? ((
+            error as {
+              response?: { data?: { message?: string } };
+              data?: { message?: string };
+            }
+          ).response?.data?.message ??
+          (error as { data?: { message?: string } }).data?.message)
+        : undefined;
+    return <Alert title={message || "Something went wrong"} />;
   }
 
   if (isLoading) {
@@ -81,7 +91,7 @@ export default function LatestProducts() {
                 createdAt={createdAt}
                 href={`/product/${slug}`}
               />
-            )
+            ),
           )}
         </div>
       </>

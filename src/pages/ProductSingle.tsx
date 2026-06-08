@@ -1,4 +1,4 @@
-import { Image, Skeleton } from "@heroui/react";
+import { Skeleton } from "@heroui/react";
 import { useGetProductBySlugQuery } from "../services/product";
 import { useParams } from "react-router-dom";
 
@@ -7,13 +7,17 @@ export default function ProductSingle() {
   const { data, error, isLoading } = useGetProductBySlugQuery(slug!, {
     skip: !slug,
   });
+  const errorMessage =
+    typeof error === "object" && error !== null && "data" in error
+      ? (error as { data?: { message?: string } }).data?.message
+      : undefined;
 
   return (
     <div className="max-w-5xl mx-auto px-6">
       {error ? (
         <div className="h-96 flex justify-center items-center">
           <small className="text-danger text-2xl">
-            {(error as any)?.data?.message}
+            {errorMessage || "Something went wrong"}
           </small>
         </div>
       ) : isLoading ? (
@@ -32,7 +36,7 @@ export default function ProductSingle() {
         </div>
       ) : data ? (
         <>
-          <Image
+          <img
             src={
               data.imageUrl.startsWith("/")
                 ? `${import.meta.env.VITE_API_URL}${data.imageUrl}`
@@ -41,7 +45,9 @@ export default function ProductSingle() {
             alt={data.title}
             height={120}
             width={1024}
-            className="aspect-video object-cover"
+            className="aspect-video w-full object-cover"
+            loading="lazy"
+            decoding="async"
           />
           <article className="text-pretty my-10">
             <h1 className="mb-10 lg:text-5xl text-4xl font-semibold">
